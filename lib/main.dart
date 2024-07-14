@@ -40,7 +40,11 @@ class MyApp extends StatelessWidget {
                   ],
                 ),
               ),
-              MessageBox(),
+              MessageBox(
+                onSendMessage: (value) {
+                  print('chat: $value');
+                },
+              ),
             ],
           ),
         ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MessageBox extends StatefulWidget {
-  const MessageBox({super.key});
+  final ValueChanged<String> onSendMessage;
+
+  const MessageBox({super.key, required this.onSendMessage});
 
   @override
   State<MessageBox> createState() => _MessageBoxState();
@@ -31,7 +33,20 @@ class _MessageBoxState extends State<MessageBox> {
               width: 1,
             ),
           ),
+          suffixIcon: IconButton(
+            onPressed: () {
+              widget.onSendMessage(_controller.text);
+              _controller.clear();
+            },
+            icon: Icon(Icons.send),
+          ),
         ),
+        onSubmitted: (value) {
+          widget.onSendMessage(value);
+          setState(() {
+            _controller.clear();
+          });
+        },
       ),
     );
   }
