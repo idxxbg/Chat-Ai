@@ -1,13 +1,18 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:public_chat/widgets/chat_bubble_widget.dart';
 import 'package:public_chat/widgets/message_box_widget.dart';
+import 'package:public_chat/worker/genai_worker.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GenAiWorker _work = GenAiWorker();
+
+  MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -42,7 +47,9 @@ class MyApp extends StatelessWidget {
               ),
               MessageBox(
                 onSendMessage: (value) {
-                  print('chat: $value');
+                  const apiKey = String.fromEnvironment('apiKey');
+
+                  print('chat: $apiKey');
                 },
               ),
             ],
