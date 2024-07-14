@@ -17,6 +17,27 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final GenAiWorker _work = GenAiWorker();
   final ScrollController _scrollController = ScrollController();
+
+  void _scrollToBottom() {
+    // if (_scrollController.hasClients) {
+    //   _scrollController.animateTo(
+    //     _scrollController.position.maxScrollExtent,
+    //     duration: const Duration(milliseconds: 300),
+    //     curve: Curves.easeOut,
+    //   );
+    // }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -45,7 +66,9 @@ class _MyAppState extends State<MyApp> {
                         controller: _scrollController,
                         children: data.map((e) {
                           final bool isMine = e.sender == Sender.user;
+                          int _messageCount = 0;
                           return ChatBubble(
+                              heroTag: 'message_${_messageCount++}',
                               photoUrl: null,
                               message: e.message,
                               isMine: isMine);
@@ -55,10 +78,8 @@ class _MyAppState extends State<MyApp> {
               ),
               MessageBox(
                 onSendMessage: (value) {
-                  // const apiKey = String.fromEnvironment('apiKey');
-                  _work.sendToGemini(value);
-
-                  // print('chat: $apiKey');
+                  _scrollToBottom();
+                  _work.sendToGemini(value, _scrollToBottom);
                 },
               ),
             ],

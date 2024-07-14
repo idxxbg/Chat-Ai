@@ -7,8 +7,8 @@
     {
       "name": "public_chat",
       "request": "launch",
-      "type": "dart",
-      "args": ["--dart-define=apiKey=AIzaSyBp3JPa1Z2exxj08nIn_7-EfFUWali85ss"]
+      "type": "dart"
+      // "args": ["--dart-define=apiKey=AIzaSyBp3JPa1Z2exxj08nIn_7-EfFUWali85ss"]
     },
     {
       "name": "public_chat (profile mode)",

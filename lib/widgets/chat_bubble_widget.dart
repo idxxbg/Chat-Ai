@@ -9,12 +9,14 @@ class ChatBubble extends StatelessWidget {
   final String? photoUrl;
   final String message;
   final bool isMine;
+  final String heroTag;
   final double _iconSize = 25;
   const ChatBubble({
     super.key,
     required this.photoUrl,
     required this.message,
     required this.isMine,
+    required this.heroTag,
   });
 
   @override
@@ -28,15 +30,16 @@ class ChatBubble extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(_iconSize),
           child: photoUrl == null
-              ? const _DefaultPersonWidget()
+              ? _DefaultPersonWidget(robot: isMine)
               : CachedNetworkImage(
                   imageUrl: photoUrl!,
                   width: _iconSize,
                   height: _iconSize,
                   fit: BoxFit.fitWidth,
                   errorWidget: (context, url, Error) =>
-                      const _DefaultPersonWidget(),
-                  placeholder: (context, url) => const _DefaultPersonWidget(),
+                      _DefaultPersonWidget(robot: isMine),
+                  placeholder: (context, url) =>
+                      _DefaultPersonWidget(robot: isMine),
                 ),
         ),
       ),
@@ -61,26 +64,39 @@ class ChatBubble extends StatelessWidget {
         ),
       ),
     );
-
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment:
-          isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: isMine ? widgets.reversed.toList() : widgets,
+// dong message hien thi
+    return Hero(
+      tag: heroTag,
+      child: Material(
+        type: MaterialType.transparency,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment:
+              isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+          children: isMine ? widgets.reversed.toList() : widgets,
+        ),
+      ),
     );
   }
 }
 
 class _DefaultPersonWidget extends StatelessWidget {
-  const _DefaultPersonWidget({super.key});
+  final bool robot;
+  const _DefaultPersonWidget({super.key, required this.robot});
 
   @override
   Widget build(BuildContext context) {
-    return const Icon(
-      Icons.person,
-      color: Colors.black,
-      size: 13,
-    );
+    return robot
+        ? const Icon(
+            Icons.person_pin,
+            color: Colors.black,
+            size: 20,
+          )
+        : const Icon(
+            Icons.air,
+            color: Colors.black,
+            size: 20,
+          );
   }
 }
