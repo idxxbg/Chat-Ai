@@ -16,25 +16,29 @@ class GenAiWorker {
         ? print('GenAi - oh ohhh!!!')
         : print('GenAi - Hello world!');
 
-    _model = GenerativeModel(model: 'Gemini 1.5 Pro', apiKey: apiKey);
+    _model = GenerativeModel(model: 'gemini-1.0-pro', apiKey: apiKey);
   }
 
   void sendToGemini(String message) async {
+    // Thêm tin nhắn của người dùng và cập nhật luồng
+    _content.add(ChatContent.user(message));
+    _streamController.sink.add(_content);
     try {
-      _content.add(ChatContent.user(message));
-      _streamController.sink.add(_content);
+      // Gửi tin nhắn đến AI và chờ phản hồi
       final response = await _model.generateContent([Content.text(message)]);
-
       final String? text = response.text;
 
-      text == null
-          ? _content.add(ChatContent.gemini('Unable to generate response'))
-          : _content.add(ChatContent.gemini(text));
-
-      // _model.generateContent({Content.text((message))});
+      // Thêm phản hồi từ AI vào luồng và cập nhật lại
+      if (text == null) {
+        _content.add(ChatContent.gemini('Unable to generate response'));
+      } else {
+        _content.add(ChatContent.gemini(text));
+      }
+      _streamController.sink.add(_content); // Đảm bảo cập nhật luồng tại đây
     } catch (e) {
       print(e);
       _content.add(ChatContent.gemini('Unable to generate response'));
+      _streamController.sink.add(_content); // Cập nhật luồng khi có lỗi
     }
     ;
   }
