@@ -1,9 +1,7 @@
-import 'dart:js_interop';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ChatBubble extends StatelessWidget {
   final String? photoUrl;

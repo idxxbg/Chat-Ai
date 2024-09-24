@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:public_chat/bloc/genai_bloc.dart';
+import 'package:public_chat/data/chat_content.dart';
 import 'package:public_chat/widgets/chat_bubble_widget.dart';
 import 'package:public_chat/widgets/message_box_widget.dart';
 import 'package:public_chat/worker/genai_worker.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(BlocProvider(
+    create: (context) => GenaiBloc(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -58,10 +64,11 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             children: [
               Expanded(
-                child: StreamBuilder<List<ChatContent>>(
-                    stream: _work.stream,
-                    builder: (context, snapshot) {
-                      final List<ChatContent> data = snapshot.data ?? [];
+                child: BlocBuilder<GenaiBloc, GenaiState>(
+                  builder: (context, state) {
+                    final List<ChatContent> data = [];
+                    if (state is MessageUpdate) {
+                      data.addAll(state.contents);
                       return ListView(
                         controller: _scrollController,
                         children: data.map((e) {
@@ -74,12 +81,18 @@ class _MyAppState extends State<MyApp> {
                               isMine: isMine);
                         }).toList(),
                       );
-                    }),
+                    }
+                    return ListView(
+                      children: [Text("data")],
+                    );
+                  },
+                ),
               ),
               MessageBox(
                 onSendMessage: (value) {
                   _scrollToBottom();
-                  _work.sendToGemini(value, _scrollToBottom);
+                  // _work.sendToGemini(value, _scrollToBottom);
+                  context.read<GenaiBloc>().add(SendMessageEvent(value));
                 },
               ),
             ],

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:public_chat/data/chat_content.dart';
 
 class GenAiWorker {
   late final GenerativeModel _model;
@@ -10,13 +11,13 @@ class GenAiWorker {
   Stream<List<ChatContent>> get stream => _streamController.stream;
 
   GenAiWorker() {
-    const apiKey = String.fromEnvironment('apiKey');
+    const apiKey = "AIzaSyBp3JPa1Z2exxj08nIn_7-EfFUWali85ss";
     apiKey == null
         ? print('GenAi - oh ohhh!!!')
         : print('GenAi - Hello world!');
 
-    // _model = GenerativeModel(model: 'gemini-1.0-pro', apiKey: apiKey);
-    _model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
+    _model = GenerativeModel(model: 'gemini-1.0-pro', apiKey: apiKey);
+    // _model = GenerativeModel(model: 'gemini-1.5-pro', apiKey: apiKey);
   }
 
   void sendToGemini(String message, void Function() _scrollToBottom) async {
@@ -48,12 +49,12 @@ class GenAiWorker {
   }
 }
 
-enum Sender { user, gemini }
+// enum Sender { user, gemini }
 
-class ChatContent {
-  final Sender sender;
-  final String message;
+// class ChatContent {
+//   final Sender sender;
+//   final String message;
 
-  ChatContent.user(this.message) : sender = Sender.user;
-  ChatContent.gemini(this.message) : sender = Sender.gemini;
-}
+//   ChatContent.user(this.message) : sender = Sender.user;
+//   ChatContent.gemini(this.message) : sender = Sender.gemini;
+// }
